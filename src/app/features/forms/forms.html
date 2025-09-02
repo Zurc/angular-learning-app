@@ -137,7 +137,7 @@
         <div class="form-builder">
           <h4>Dynamic Form:</h4>
           @for (field of formFields(); track field.id) {
-            <div class="dynamic-field" [@listAnimation]>
+            <div class="dynamic-field" animate.enter="list-enter">
               <label>{{ field.label }}:</label>
               @switch (field.type) {
                 @case ('text') {
@@ -202,7 +202,7 @@
 formFields = signal&lt;FormField[]&gt;([]);
 formData = signal&lt;Record&lt;string, any&gt;&gt;(&#123;&#125;);
 
-// Template with @switch for field types
+// Template with &#64;switch for field types
 &#64;for (field of formFields(); track field.id) &#123;
   &lt;div class="dynamic-field"&gt;
     &lt;label&gt;{{ '{' }}{{ '{' }} field.label {{ '}' }}{{ '}' }}:&lt;/label&gt;

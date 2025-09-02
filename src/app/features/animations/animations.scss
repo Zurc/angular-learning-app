@@ -207,6 +207,150 @@
   }
 }
 
+// New CSS-based animations to replace @angular/animations
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes slide-in-left {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slide-out-right {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+@keyframes list-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes bounce {
+  0% { transform: translateY(0); }
+  30% { transform: translateY(-30px); }
+  50% { transform: translateY(0); }
+  70% { transform: translateY(-15px); }
+  100% { transform: translateY(0); }
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+@keyframes wobble {
+  0% { transform: rotate(0deg); }
+  25% { transform: rotate(-5deg); }
+  50% { transform: rotate(5deg); }
+  75% { transform: rotate(-3deg); }
+  100% { transform: rotate(0deg); }
+}
+
+// Animation classes
+.fade-enter {
+  animation: fade-in 300ms ease-in;
+}
+
+.slide-enter {
+  animation: slide-in-left 300ms ease-in;
+}
+
+.list-enter {
+  animation: list-enter 200ms ease-out;
+}
+
+.bounce-animation {
+  animation: bounce 600ms ease-out;
+}
+
+.pulse-animation {
+  animation: pulse 800ms ease-out;
+}
+
+.wobble-animation {
+  animation: wobble 600ms ease-out;
+}
+
+// State transition styles
+.state-demo-box {
+  transition: all 500ms ease-in-out;
+  
+  &.expanded {
+    height: 200px !important;
+    width: 300px !important;
+  }
+  
+  &.collapsed {
+    height: 100px !important;
+    width: 200px !important;
+  }
+  
+  &.blue {
+    background-color: #3498db !important;
+    border-color: #2980b9 !important;
+  }
+  
+  &.red {
+    background-color: #e74c3c !important;
+    border-color: #c0392b !important;
+  }
+  
+  &.green {
+    background-color: #27ae60 !important;
+    border-color: #229954 !important;
+  }
+  
+  &.purple {
+    background-color: #9b59b6 !important;
+    border-color: #8e44ad !important;
+  }
+  
+  &.rotated {
+    transform: rotate(45deg);
+    transition: transform 300ms ease;
+  }
+  
+  &.normal {
+    transform: rotate(0deg);
+    transition: transform 300ms ease;
+  }
+}
+
 @media (max-width: 768px) {
   .page-header h1 {
     font-size: 2rem;

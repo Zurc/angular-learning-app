@@ -6,13 +6,18 @@ A comprehensive interactive Angular application demonstrating modern patterns, s
 
 This application serves as an interactive learning resource for modern Angular development, showcasing the latest patterns and best practices through hands-on examples. Each section includes working demonstrations, code examples, and explanations.
 
+### 🌐 Live Demo
+**🔗 [https://zurc.github.io/angular-learning-app/](https://zurc.github.io/angular-learning-app/)**
+
+Deployed automatically via GitHub Pages using GitHub Actions.
+
 ## 🏗️ Architecture
 
 - **Angular Version**: 20.2.1
 - **Architecture**: Standalone components (no NgModule)
 - **Styling**: SCSS with custom gradients and animations
 - **State Management**: Angular Signals
-- **Animations**: Angular Animations API
+- **Animations**: Modern CSS-based animations with animate.enter/leave API
 - **Routing**: Angular Router with lazy loading
 
 ## 📚 Sections Overview
@@ -28,15 +33,17 @@ This application serves as an interactive learning resource for modern Angular d
 
 **Technical Implementation**:
 - Standalone component architecture
-- RouterLink integration
+- RouterLink integration with clickable logo navigation
 - CSS Grid with responsive breakpoints
 - Hover animations and transitions
+- Interactive header with home navigation
 
 **UX Patterns**:
 - Clear visual hierarchy
-- Intuitive navigation
+- Intuitive navigation with clickable logo
 - Consistent visual language
 - Mobile-first responsive design
+- Accessible navigation patterns
 
 ---
 
@@ -156,8 +163,8 @@ isHighlighted = true;
 
 ---
 
-### 4. 🎭 Angular Animations
-**Purpose**: Comprehensive animation patterns for engaging UX
+### 4. 🎭 Modern CSS Animations
+**Purpose**: Hardware-accelerated animations using Angular 20.2+ patterns (migrated from deprecated @angular/animations)
 
 #### **Features Implemented**:
 
@@ -186,27 +193,32 @@ isHighlighted = true;
 - Complex animation sequences
 
 #### **Technical Implementation**:
-```typescript
-// Animation definitions
-trigger('fadeInOut', [
-  transition(':enter', [
-    style({ opacity: 0 }),
-    animate('300ms ease-in', style({ opacity: 1 }))
-  ]),
-  transition(':leave', [
-    animate('300ms ease-out', style({ opacity: 0 }))
-  ])
-]),
+```css
+/* CSS Keyframes - Modern Animation Approach */
+@keyframes fade-enter {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
 
-trigger('bounceAnimation', [
-  transition('idle => bounce', [
-    animate('600ms', keyframes([
-      style({ transform: 'translateY(0)', offset: 0 }),
-      style({ transform: 'translateY(-30px)', offset: 0.3 }),
-      style({ transform: 'translateY(0)', offset: 1 })
-    ]))
-  ])
-])
+@keyframes bounce {
+  0% { transform: translateY(0); }
+  30% { transform: translateY(-30px); }
+  50% { transform: translateY(0); }
+  70% { transform: translateY(-15px); }
+  100% { transform: translateY(0); }
+}
+
+.fade-enter { animation: fade-enter 300ms ease-in; }
+.bounce-animation { animation: bounce 600ms ease-out; }
+```
+
+```html
+<!-- Template with new animate.enter API -->
+@if (showItem) {
+  <div animate.enter="fade-enter">Content</div>
+}
+
+<div [class.bounce-animation]="triggerBounce">Animated Element</div>
 ```
 
 #### **UX Patterns**:
@@ -219,7 +231,15 @@ trigger('bounceAnimation', [
 - CSS transforms and opacity
 - Keyframe-based sequences
 - State-driven transitions
-- Physics-based animations
+- Hardware-accelerated animations
+
+#### **Migration Benefits**:
+- ✅ Removed deprecated @angular/animations dependency
+- ✅ Smaller bundle size (3kB reduction)
+- ✅ Better performance with CSS hardware acceleration
+- ✅ Simpler animation definitions
+- ✅ Future-proof with web standards
+- ✅ Compatible with Angular 20.2+ animate.enter/leave API
 
 ---
 
@@ -383,7 +403,7 @@ cooldownProgress = computed(() => {
 - ✅ Angular Signals for state management
 - ✅ Computed signals for derived state
 - ✅ Effect signals for side effects
-- ✅ Angular Animations API
+- ✅ Modern CSS-based animations (Angular 20.2+ animate.enter/leave API)
 - ✅ Modern control flow (@if, @for, @switch)
 - ✅ TypeScript strict mode
 - ✅ ESLint and Prettier integration
@@ -392,14 +412,14 @@ cooldownProgress = computed(() => {
 - **Standalone Components**: Eliminates NgModule complexity
 - **Signal-Based State**: Reactive programming without RxJS complexity
 - **Component Communication**: Multiple patterns demonstrated
-- **Animation Integration**: Smooth UX transitions
+- **Animation Integration**: Modern CSS animations with hardware acceleration
 - **Form Management**: Signals instead of Reactive Forms
 - **Error Handling**: User-friendly error recovery
 
 ### **Performance Optimizations**:
 - **OnPush Change Detection**: Automatic with signals
 - **Lazy Loading**: Route-based code splitting
-- **Animation Performance**: CSS transforms and opacity
+- **Animation Performance**: Hardware-accelerated CSS animations, smaller bundle size
 - **Memory Management**: Proper cleanup of intervals/timeouts
 - **Tree Shaking**: Standalone components enable better optimization
 
@@ -448,7 +468,7 @@ cooldownProgress = computed(() => {
 
 ### **Prerequisites**:
 ```bash
-Node.js 18+ 
+Node.js 22+ (required for Angular CLI 20+)
 Angular CLI 20+
 ```
 
@@ -522,6 +542,27 @@ After exploring this application, you'll understand:
 - [Angular Signals Guide](https://angular.dev/guide/signals)
 - [Angular Animations](https://angular.dev/guide/animations)
 - [Standalone Components](https://angular.dev/guide/standalone-components)
+
+---
+
+## 📋 Recent Updates
+
+### v2.0.0 - Modern Animation Migration
+- ✅ **BREAKING**: Migrated from deprecated `@angular/animations` to CSS-based animations
+- ✅ Implemented Angular 20.2+ `animate.enter`/`animate.leave` API patterns
+- ✅ Added clickable logo navigation to home page
+- ✅ Updated all code examples to use new Angular control flow syntax (`@if`, `@for`, `@switch`)
+- ✅ Improved bundle size by removing deprecated animation dependencies
+- ✅ Enhanced performance with hardware-accelerated CSS animations
+- ✅ Updated documentation with accurate Node.js version requirements
+
+### v1.0.0 - Initial Release
+- 🎉 Complete Angular learning application with 6 interactive sections
+- 📡 Angular Signals implementation with reactive patterns
+- 🧩 Component communication patterns and ViewChild examples  
+- 🎭 Animation examples (now modernized to CSS-based)
+- 📝 Signal-based forms without ControlValueAccessor complexity
+- 🎨 UI patterns for professional applications
 
 ---
 

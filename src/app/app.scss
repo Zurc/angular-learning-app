@@ -15,6 +15,15 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    color: white;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    
+    &:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
     
     h1 {
       color: white;

@@ -1,5 +1,4 @@
 import { Component, signal, computed } from '@angular/core';
-import { trigger, transition, style, animate } from '@angular/animations';
 
 interface FormField {
   id: string;
@@ -23,26 +22,6 @@ interface PasswordValidation {
   imports: [],
   templateUrl: './forms.html',
   styleUrl: './forms.scss',
-  animations: [
-    trigger('listAnimation', [
-      transition(':enter', [
-        style({
-          opacity: 0,
-          transform: 'translateY(-10px) scale(0.95)'
-        }),
-        animate('200ms ease-out', style({
-          opacity: 1,
-          transform: 'translateY(0) scale(1)'
-        }))
-      ]),
-      transition(':leave', [
-        animate('200ms ease-in', style({
-          opacity: 0,
-          transform: 'translateY(-10px) scale(0.95)'
-        }))
-      ])
-    ])
-  ]
 })
 export class Forms {
   // Signal-based form controls

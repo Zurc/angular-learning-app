@@ -11,7 +11,7 @@
     <div 
       class="toast" 
       [class]="'toast-' + toast.type"
-      [@toastAnimation]
+      animate.enter="toast-enter"
       (click)="removeToast(toast.id)">
       <div class="toast-content">
         <div class="toast-icon">
@@ -44,7 +44,7 @@
           @if (isLoading()) {
             <!-- Skeleton Loading Cards -->
             @for (item of [1,2,3]; track item) {
-              <div class="skeleton-card" [@slideUp]>
+              <div class="skeleton-card" animate.enter="slide-up">
                 <div class="skeleton-avatar"></div>
                 <div class="skeleton-content">
                   <div class="skeleton-line skeleton-title"></div>
@@ -56,7 +56,7 @@
           } @else {
             <!-- Actual Content Cards -->
             @for (item of skeletonItems(); track item.id) {
-              <div class="content-card" [@slideUp]>
+              <div class="content-card" animate.enter="slide-up">
                 <div class="card-avatar">{{ item.image }}</div>
                 <div class="card-content">
                   <h4>{{ item.title }}</h4>
@@ -202,7 +202,7 @@ trigger('toastAnimation', [
       
       <div class="demo-output">
         @if (isUploading()) {
-          <div class="progress-section" [@fadeInOut]>
+          <div class="progress-section" animate.enter="fade-enter">
             <h4>Upload Progress</h4>
             <div class="progress-bar">
               <div 
@@ -273,7 +273,7 @@ simulateSave() &#123;
           <p>Perfect for rate-limited actions like API calls, game abilities, or preventing spam.</p>
           
           @if (cooldownActive()) {
-            <div class="cooldown-status" [@fadeInOut]>
+            <div class="cooldown-status" animate.enter="fade-enter">
               <div class="cooldown-progress">
                 <div class="cooldown-bar">
                   <div 
@@ -336,7 +336,7 @@ triggerCooldown() &#123;
       </div>
       <div class="demo-output">
         @if (hasError()) {
-          <div class="error-panel" [@slideUp]>
+          <div class="error-panel" animate.enter="slide-up">
             <div class="error-header">
               <span class="error-icon">⚠️</span>
               <h4>Something went wrong</h4>
@@ -352,7 +352,7 @@ triggerCooldown() &#123;
             </div>
           </div>
         } @else {
-          <div class="success-panel" [@fadeInOut]>
+          <div class="success-panel" animate.enter="fade-enter">
             <div class="success-header">
               <span class="success-icon">✅</span>
               <h4>System Status: Operational</h4>
