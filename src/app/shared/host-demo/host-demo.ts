@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 
 @Component({
   selector: 'app-host-demo',
@@ -6,13 +6,13 @@ import { Component, Input } from '@angular/core';
   templateUrl: './host-demo.html',
   styleUrl: './host-demo.scss',
   host: {
-    '[class.highlighted]': 'isHighlighted',
-    '[attr.data-theme]': 'theme',
-    '[style.opacity]': 'opacity / 100'
+    '[class.highlighted]': 'isHighlighted()',
+    '[attr.data-theme]': 'theme()',
+    '[style.opacity]': 'opacity() / 100'
   }
 })
 export class HostDemo {
-  @Input() isHighlighted = false;
-  @Input() theme = 'default';
-  @Input() opacity = 100;
+  isHighlighted = input(false);
+  theme = input('default');
+  opacity = input(100);
 }

@@ -118,10 +118,10 @@ constructor() {
 - Lifecycle integration
 
 **Parent-Child Communication**:
-- @Input property binding
-- @Output event emission
-- Bi-directional data flow
-- State synchronization
+- Modern `input()` function for property binding
+- Modern `output()` function for event emission
+- Signal-based bi-directional data flow
+- State synchronization with signals
 
 **Content Projection**:
 - ng-content usage
@@ -141,13 +141,15 @@ constructor() {
 @ViewChild('inputElement', { static: false }) 
 inputElement!: ElementRef<HTMLInputElement>;
 
-// Input/Output communication
-@Input() parentValue = '';
-@Output() valueChanged = new EventEmitter<string>();
+// Modern Input/Output communication
+parentValue = input<string>('');
+valueChanged = output<string>();
 
-// Host binding
-@HostBinding('class.highlight') 
-isHighlighted = true;
+// Host binding with signals
+host: {
+  '[class.highlight]': 'isHighlighted()'
+}
+isHighlighted = input(false);
 ```
 
 #### **UX Patterns**:
@@ -404,6 +406,7 @@ cooldownProgress = computed(() => {
 - ✅ Angular Signals for state management
 - ✅ Computed signals for derived state
 - ✅ Effect signals for side effects
+- ✅ **NEW**: Modern `input()` and `output()` functions (Angular 20.2+)
 - ✅ Modern CSS-based animations (Angular 20.2+ animate.enter/leave API)
 - ✅ Modern control flow (@if, @for, @switch)
 - ✅ TypeScript strict mode
@@ -547,6 +550,14 @@ After exploring this application, you'll understand:
 ---
 
 ## 📋 Recent Updates
+
+### v2.1.0 - Modern Input/Output Functions
+- ✅ **NEW**: Migrated from `@Input()/@Output()` decorators to modern `input()` and `output()` functions
+- ✅ Updated component communication patterns to use signal-based inputs
+- ✅ Enhanced host bindings to work with signal inputs
+- ✅ Improved type safety with generic input/output types
+- ✅ Better performance with automatic change detection optimization
+- ✅ Updated documentation to reflect modern Angular patterns
 
 ### v2.0.0 - Modern Animation Migration
 - ✅ **BREAKING**: Migrated from deprecated `@angular/animations` to CSS-based animations

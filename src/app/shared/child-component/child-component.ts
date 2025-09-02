@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 
 @Component({
   selector: 'app-child-component',
@@ -7,14 +7,14 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
   styleUrl: './child-component.scss'
 })
 export class ChildComponent {
-  @Input() message: string = '';
-  @Input() counter: number = 0;
-  @Output() messageEvent = new EventEmitter<string>();
-  @Output() counterChange = new EventEmitter<number>();
+  message = input<string>('');
+  counter = input<number>(0);
+  messageEvent = output<string>();
+  counterChange = output<number>();
 
   incrementCounter() {
-    this.counter++;
-    this.counterChange.emit(this.counter);
+    const newCounter = this.counter() + 1;
+    this.counterChange.emit(newCounter);
   }
 
   sendMessageToParent() {
