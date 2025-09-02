@@ -57,19 +57,21 @@ getInputValue() &#123;
       </div>
     </div>
     <div class="code-example">
-      <h3>Parent Component:</h3>
-      <pre><code>// Parent Component
-@Input() message: string = '';
-@Input() counter: number = 0;
-@Output() messageEvent = new EventEmitter&lt;string&gt;();
-@Output() counterChange = new EventEmitter&lt;number&gt;();
+      <h3>Child Component (Modern Angular 20.2+):</h3>
+      <pre><code>// Child Component with modern input()/output()
+message = input&lt;string&gt;('');
+counter = input&lt;number&gt;(0);
+messageEvent = output&lt;string&gt;();
+counterChange = output&lt;number&gt;();
 
-sendMessageToChild() &#123;
-  this.childMessage = `Hello at $&#123;new Date().toLocaleTimeString()&#125;`;
+incrementCounter() &#123;
+  const newCounter = this.counter() + 1;
+  this.counterChange.emit(newCounter);
 &#125;
 
-onChildMessage(message: string) &#123;
-  this.messagesFromChild.push(message);
+sendMessageToParent() &#123;
+  const message = `Child says hello at $&#123;new Date().toLocaleTimeString()&#125;`;
+  this.messageEvent.emit(message);
 &#125;</code></pre>
     </div>
   </div>
@@ -152,29 +154,29 @@ onChildMessage(message: string) &#123;
       </div>
     </div>
     <div class="code-example">
-      <h3>Host Demo Component with New Control Flow:</h3>
+      <h3>Host Demo Component (Modern Angular 20.2+):</h3>
       <pre><code>@Component(&#123;
   selector: 'app-host-demo',
   template: `
     &lt;ng-content&gt;&lt;/ng-content&gt;
-    &#64;if (showDetails) &#123;
+    &#64;if (showDetails()) &#123;
       &lt;div class="host-details"&gt;
-        &lt;p&gt;Theme: {{ '{' }}{{ '{' }} theme {{ '}' }}{{ '}' }}&lt;/p&gt;
-        &lt;p&gt;Opacity: {{ '{' }}{{ '{' }} opacity {{ '}' }}{{ '}' }}%&lt;/p&gt;
+        &lt;p&gt;Theme: {{ '{' }}{{ '{' }} theme() {{ '}' }}{{ '}' }}&lt;/p&gt;
+        &lt;p&gt;Opacity: {{ '{' }}{{ '{' }} opacity() {{ '}' }}{{ '}' }}%&lt;/p&gt;
       &lt;/div&gt;
     &#125;
   `,
   host: &#123;
-    '[class.highlighted]': 'isHighlighted',
-    '[attr.data-theme]': 'theme',
-    '[style.opacity]': 'opacity / 100'
+    '[class.highlighted]': 'isHighlighted()',
+    '[attr.data-theme]': 'theme()',
+    '[style.opacity]': 'opacity() / 100'
   &#125;
 &#125;)
 export class HostDemoComponent &#123;
-  @Input() isHighlighted = false;
-  @Input() theme = 'default';
-  @Input() opacity = 100;
-  @Input() showDetails = false;
+  isHighlighted = input(false);
+  theme = input('default');
+  opacity = input(100);
+  showDetails = input(false);
 &#125;</code></pre>
     </div>
   </div>
