@@ -30,6 +30,7 @@ Deployed automatically via GitHub Pages using GitHub Actions.
 - Responsive grid layout
 - Router navigation to all sections
 - Modern UI with consistent branding
+- GitHub repository ribbon for easy access to source code
 
 **Technical Implementation**:
 - Standalone component architecture

@@ -17,8 +17,36 @@
     font-size: 1.2rem;
     color: #666;
     max-width: 600px;
+    margin: 0 auto 1.5rem;
+    line-height: 1.6;
+  }
+  
+  .hero-cta {
+    font-size: 1.1rem;
+    color: #555;
+    max-width: 700px;
     margin: 0 auto;
     line-height: 1.6;
+    background: linear-gradient(135deg, #f8f9ff 0%, #e6f3ff 100%);
+    padding: 1.5rem;
+    border-radius: 12px;
+    border: 1px solid #e0e8f0;
+    
+    .github-link {
+      color: #667eea;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      
+      &:hover {
+        color: #764ba2;
+        text-decoration: underline;
+        transform: translateY(-1px);
+      }
+    }
   }
 }
 
@@ -120,6 +148,12 @@
 @media (max-width: 768px) {
   .hero-section h1 {
     font-size: 2rem;
+  }
+  
+  .hero-section .hero-cta {
+    font-size: 1rem;
+    padding: 1rem;
+    margin: 0 1rem;
   }
   
   .concepts-grid {

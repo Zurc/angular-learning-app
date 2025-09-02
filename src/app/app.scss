@@ -65,6 +65,15 @@
   margin: 0 auto;
 }
 
+// GitHub Ribbon customization
+.github-fork-ribbon {
+  z-index: 1000; // Ensure it appears above other content
+  
+  &:hover {
+    text-decoration: none;
+  }
+}
+
 @media (max-width: 768px) {
   .app-header .main-nav {
     flex-direction: column;
@@ -78,5 +87,10 @@
   
   .main-content {
     padding: 1rem;
+  }
+  
+  // Hide ribbon on mobile for better UX
+  .github-fork-ribbon {
+    display: none;
   }
 }
