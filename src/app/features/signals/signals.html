@@ -18,17 +18,35 @@
       </div>
     </div>
     <div class="code-example">
-      <h3>Code:</h3>
-      <pre><code>count = signal(0);
+      <h3>Signals with New Control Flow:</h3>
+      <pre><code>// TypeScript
+count = signal(0);
+items = signal(['apple', 'banana', 'orange']);
+status = signal('idle');
 
-incrementCount() {{'{'}}{{'}'}}
-  this.count.update(current => current + 1);
-{{'}'}}
-
-resetCount() {{'{'}}{{'}'}}
-  this.count.set(0);
-{{'}'}}
-</code></pre>
+// Template with new control flow syntax
+&lt;div&gt;
+  &lt;p&gt;Count: {{ '{' }}{{ '{' }} count() {{ '}' }}{{ '}' }}&lt;/p&gt;
+  
+  &#64;if (count() > 0) &#123;
+    &lt;p&gt;Count is positive: {{ '{' }}{{ '{' }} count() {{ '}' }}{{ '}' }}&lt;/p&gt;
+  &#125; &#64;else &#123;
+    &lt;p&gt;Count is zero or negative&lt;/p&gt;
+  &#125;
+  
+  &#64;switch (status()) &#123;
+    &#64;case ('loading') &#123; &lt;p&gt;Loading...&lt;/p&gt; &#125;
+    &#64;case ('success') &#123; &lt;p&gt;Success!&lt;/p&gt; &#125;
+    &#64;case ('error') &#123; &lt;p&gt;Error occurred&lt;/p&gt; &#125;
+    &#64;default &#123; &lt;p&gt;Ready&lt;/p&gt; &#125;
+  &#125;
+  
+  &#64;for (item of items(); track item) &#123;
+    &lt;div&gt;{{ '{' }}{{ '{' }} item {{ '}' }}{{ '}' }}&lt;/div&gt;
+  &#125; &#64;empty &#123;
+    &lt;p&gt;No items available&lt;/p&gt;
+  &#125;
+&lt;/div&gt;</code></pre>
     </div>
   </div>
 

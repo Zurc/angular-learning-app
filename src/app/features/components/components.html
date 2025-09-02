@@ -51,6 +51,8 @@ getInputValue() &#123;
         <p>Messages from child: {{ messagesFromChild.length }}</p>
         @for (msg of messagesFromChild; track $index) {
           <div class="message-item">{{ msg }}</div>
+        } @empty {
+          <p>No messages yet</p>
         }
       </div>
     </div>
@@ -98,8 +100,9 @@ onChildMessage(message: string) &#123;
       </div>
     </div>
     <div class="code-example">
-      <h3>Card Component Template:</h3>
-      <pre><code>&lt;div class="card"&gt;
+      <h3>Card Component with New Control Flow:</h3>
+      <pre><code>// Card Component Template
+&lt;div class="card"&gt;
   &lt;div class="card-header"&gt;
     &lt;ng-content select="[slot=header]"&gt;&lt;/ng-content&gt;
   &lt;/div&gt;
@@ -109,7 +112,18 @@ onChildMessage(message: string) &#123;
   &lt;div class="card-footer"&gt;
     &lt;ng-content select="[slot=footer]"&gt;&lt;/ng-content&gt;
   &lt;/div&gt;
-&lt;/div&gt;</code></pre>
+&lt;/div&gt;
+
+// Usage with new control flow in parent
+&lt;app-card-component&gt;
+  &lt;div slot="content"&gt;
+    &#64;if (showProjectionContent) &#123;
+      &lt;p&gt;Dynamic content is visible&lt;/p&gt;
+    &#125; &#64;else &#123;
+      &lt;p&gt;Content is hidden&lt;/p&gt;
+    &#125;
+  &lt;/div&gt;
+&lt;/app-card-component&gt;</code></pre>
     </div>
   </div>
 
@@ -138,10 +152,18 @@ onChildMessage(message: string) &#123;
       </div>
     </div>
     <div class="code-example">
-      <h3>Host Demo Component:</h3>
+      <h3>Host Demo Component with New Control Flow:</h3>
       <pre><code>@Component(&#123;
   selector: 'app-host-demo',
-  template: '&lt;ng-content&gt;&lt;/ng-content&gt;',
+  template: `
+    &lt;ng-content&gt;&lt;/ng-content&gt;
+    &#64;if (showDetails) &#123;
+      &lt;div class="host-details"&gt;
+        &lt;p&gt;Theme: {{ '{' }}{{ '{' }} theme {{ '}' }}{{ '}' }}&lt;/p&gt;
+        &lt;p&gt;Opacity: {{ '{' }}{{ '{' }} opacity {{ '}' }}{{ '}' }}%&lt;/p&gt;
+      &lt;/div&gt;
+    &#125;
+  `,
   host: &#123;
     '[class.highlighted]': 'isHighlighted',
     '[attr.data-theme]': 'theme',
@@ -152,6 +174,7 @@ export class HostDemoComponent &#123;
   @Input() isHighlighted = false;
   @Input() theme = 'default';
   @Input() opacity = 100;
+  @Input() showDetails = false;
 &#125;</code></pre>
     </div>
   </div>

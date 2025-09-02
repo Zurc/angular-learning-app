@@ -68,15 +68,24 @@
           [@expandCollapse]="isExpanded ? 'expanded' : 'collapsed'"
           [@colorChange]="currentColor"
           [@rotateState]="isRotated ? 'rotated' : 'normal'">
-          <p>State: {{ isExpanded ? 'Expanded' : 'Collapsed' }}</p>
+          @if (isExpanded) {
+            <p>State: Expanded</p>
+          } @else {
+            <p>State: Collapsed</p>
+          }
           <p>Color: {{ currentColor }}</p>
-          <p>Rotation: {{ isRotated ? 'Rotated' : 'Normal' }}</p>
+          @if (isRotated) {
+            <p>Rotation: Rotated</p>
+          } @else {
+            <p>Rotation: Normal</p>
+          }
         </div>
       </div>
     </div>
     <div class="code-example">
-      <h3>State Animation Code:</h3>
-      <pre><code>trigger('expandCollapse', [
+      <h3>State Animation with New Control Flow:</h3>
+      <pre><code>// Animation Triggers
+trigger('expandCollapse', [
   state('collapsed', style(&#123;
     height: '100px',
     width: '200px'
@@ -86,12 +95,25 @@
     width: '300px'
   &#125;)),
   transition('collapsed &lt;=&gt; expanded', animate('500ms ease-in-out'))
-]),
-trigger('rotateState', [
-  state('normal', style(&#123; transform: 'rotate(0deg)' &#125;)),
-  state('rotated', style(&#123; transform: 'rotate(45deg)' &#125;)),
-  transition('normal &lt;=&gt; rotated', animate('300ms ease'))
-])</code></pre>
+])
+
+// Template with new control flow
+&lt;div 
+  [&#64;expandCollapse]="isExpanded ? 'expanded' : 'collapsed'"
+  [&#64;rotateState]="isRotated ? 'rotated' : 'normal'"&gt;
+  
+  &#64;if (isExpanded) &#123;
+    &lt;p&gt;State: Expanded&lt;/p&gt;
+  &#125; &#64;else &#123;
+    &lt;p&gt;State: Collapsed&lt;/p&gt;
+  &#125;
+  
+  &#64;if (isRotated) &#123;
+    &lt;p&gt;Rotation: Rotated&lt;/p&gt;
+  &#125; &#64;else &#123;
+    &lt;p&gt;Rotation: Normal&lt;/p&gt;
+  &#125;
+&lt;/div&gt;</code></pre>
     </div>
   </div>
 
@@ -119,8 +141,9 @@ trigger('rotateState', [
       </div>
     </div>
     <div class="code-example">
-      <h3>List Animation Code:</h3>
-      <pre><code>trigger('listAnimation', [
+      <h3>List Animation with New Control Flow:</h3>
+      <pre><code>// Animation Trigger
+trigger('listAnimation', [
   transition(':enter', [
     style(&#123;
       opacity: 0,
@@ -137,7 +160,18 @@ trigger('rotateState', [
       transform: 'translateY(-10px) scale(0.95)'
     &#125;))
   ])
-])</code></pre>
+])
+
+// Template with new @for syntax
+&lt;div class="animated-list"&gt;
+  &#64;for (listItem of listItems; track listItem.id) &#123;
+    &lt;div class="list-item" [&#64;listAnimation]&gt;
+      {{ '{' }}{{ '{' }} listItem.text {{ '}' }}{{ '}' }}
+    &lt;/div&gt;
+  &#125; &#64;empty &#123;
+    &lt;p&gt;No items in the list&lt;/p&gt;
+  &#125;
+&lt;/div&gt;</code></pre>
     </div>
   </div>
 

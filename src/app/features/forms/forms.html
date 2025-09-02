@@ -95,33 +95,33 @@
     </div>
     <div class="code-example">
       <h3>Signal-Based Form Control:</h3>
-      <pre><code>// Custom Text Input Component
+      <pre><code>// Component with new control flow
 @Component(&#123;
-  selector: 'app-text-input',
   template: `
-    &lt;input 
-      [value]="value()" 
-      (input)="onInput($event)"
-      [placeholder]="placeholder()"
-      [class.invalid]="!isValid() && touched()"&gt;
+    &lt;input [value]="username()" (input)="updateUsername($event)"&gt;
+    
+    &#64;if (!isUsernameValid() && validationEnabled()) &#123;
+      &lt;div class="error-message"&gt;
+        Username must be at least 3 characters
+      &lt;/div&gt;
+    &#125;
+    
+    &lt;div class="star-rating"&gt;
+      &#64;for (star of starArray(); track $index) &#123;
+        &lt;span [class.filled]="$index &lt; rating()" 
+              (click)="setRating($index + 1)"&gt;★&lt;/span&gt;
+      &#125;
+    &lt;/div&gt;
+    
+    &lt;div class="tags-list"&gt;
+      &#64;for (tag of tags(); track tag) &#123;
+        &lt;span class="tag"&gt;{{ '{' }}{{ '{' }} tag {{ '}' }}{{ '}' }}&lt;/span&gt;
+      &#125; &#64;empty &#123;
+        &lt;p&gt;No tags added yet&lt;/p&gt;
+      &#125;
+    &lt;/div&gt;
   `
-&#125;)
-export class TextInputComponent &#123;
-  value = input('');
-  required = input(false);
-  minLength = input(0);
-  
-  @Output() valueChange = new EventEmitter&lt;string&gt;();
-  @Output() validityChange = new EventEmitter&lt;boolean&gt;();
-  
-  private touched = signal(false);
-  private isValid = computed(() => &#123;
-    const val = this.value();
-    if (this.required() && !val) return false;
-    if (val.length &lt; this.minLength()) return false;
-    return true;
-  &#125;);
-&#125;</code></pre>
+&#125;)</code></pre>
     </div>
   </div>
 
@@ -197,30 +197,34 @@ export class TextInputComponent &#123;
       </div>
     </div>
     <div class="code-example">
-      <h3>Dynamic Form Builder Code:</h3>
-      <pre><code>interface FormField &#123;
-  id: string;
-  type: 'text' | 'number' | 'select' | 'checkbox';
-  label: string;
-  placeholder?: string;
-  options?: string[];
-&#125;
-
+      <h3>Dynamic Form Builder with New Control Flow:</h3>
+      <pre><code>// TypeScript
 formFields = signal&lt;FormField[]&gt;([]);
 formData = signal&lt;Record&lt;string, any&gt;&gt;(&#123;&#125;);
 
-addFormField() &#123;
-  const fieldTypes = ['text', 'number', 'select', 'checkbox'];
-  const randomType = fieldTypes[Math.floor(Math.random() * fieldTypes.length)];
-  
-  const newField: FormField = &#123;
-    id: `field_$&#123;Date.now()&#125;`,
-    type: randomType as any,
-    label: `Field $&#123;this.formFields().length + 1&#125;`,
-    placeholder: `Enter $&#123;randomType&#125; value`
-  &#125;;
-  
-  this.formFields.update(fields => [...fields, newField]);
+// Template with @switch for field types
+&#64;for (field of formFields(); track field.id) &#123;
+  &lt;div class="dynamic-field"&gt;
+    &lt;label&gt;{{ '{' }}{{ '{' }} field.label {{ '}' }}{{ '}' }}:&lt;/label&gt;
+    
+    &#64;switch (field.type) &#123;
+      &#64;case ('text') &#123;
+        &lt;input type="text" [value]="getFieldValue(field.id)"&gt;
+      &#125;
+      &#64;case ('select') &#123;
+        &lt;select [value]="getFieldValue(field.id)"&gt;
+          &#64;for (option of field.options; track option) &#123;
+            &lt;option [value]="option"&gt;{{ '{' }}{{ '{' }} option {{ '}' }}{{ '}' }}&lt;/option&gt;
+          &#125;
+        &lt;/select&gt;
+      &#125;
+      &#64;case ('checkbox') &#123;
+        &lt;input type="checkbox" [checked]="getFieldValue(field.id)"&gt;
+      &#125;
+    &#125;
+  &lt;/div&gt;
+&#125; &#64;empty &#123;
+  &lt;p&gt;No fields added yet. Click "Add Field" to start.&lt;/p&gt;
 &#125;</code></pre>
     </div>
   </div>
