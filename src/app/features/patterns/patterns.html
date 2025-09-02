@@ -1,0 +1,397 @@
+<div class="page-header">
+  <h1>UI Patterns</h1>
+  <p class="page-description">
+    Essential UI patterns for modern web applications: loading states, notifications, error handling, and user feedback.
+  </p>
+</div>
+
+<!-- Toast Container (Fixed Position) -->
+<div class="toast-container">
+  @for (toast of toasts(); track toast.id) {
+    <div 
+      class="toast" 
+      [class]="'toast-' + toast.type"
+      [@toastAnimation]
+      (click)="removeToast(toast.id)">
+      <div class="toast-content">
+        <div class="toast-icon">
+          @switch (toast.type) {
+            @case ('success') { ✓ }
+            @case ('error') { ✕ }
+            @case ('info') { ℹ }
+            @case ('warning') { ⚠ }
+          }
+        </div>
+        <div class="toast-message">{{ toast.message }}</div>
+        <button class="toast-close" (click)="removeToast(toast.id)" title="Close">×</button>
+      </div>
+    </div>
+  }
+</div>
+
+<div class="examples-container">
+  <div class="example-section">
+    <h2>Skeleton Loading States</h2>
+    <div class="example-demo">
+      <div class="demo-controls">
+        <button (click)="toggleLoading()">
+          {{ isLoading() ? 'Stop Loading' : 'Start Loading' }}
+        </button>
+        <button (click)="startLoading()">Simulate 3s Load</button>
+      </div>
+      <div class="demo-output">
+        <div class="content-grid">
+          @if (isLoading()) {
+            <!-- Skeleton Loading Cards -->
+            @for (item of [1,2,3]; track item) {
+              <div class="skeleton-card" [@slideUp]>
+                <div class="skeleton-avatar"></div>
+                <div class="skeleton-content">
+                  <div class="skeleton-line skeleton-title"></div>
+                  <div class="skeleton-line skeleton-text"></div>
+                  <div class="skeleton-line skeleton-text short"></div>
+                </div>
+              </div>
+            }
+          } @else {
+            <!-- Actual Content Cards -->
+            @for (item of skeletonItems(); track item.id) {
+              <div class="content-card" [@slideUp]>
+                <div class="card-avatar">{{ item.image }}</div>
+                <div class="card-content">
+                  <h4>{{ item.title }}</h4>
+                  <p>{{ item.description }}</p>
+                </div>
+              </div>
+            }
+          }
+        </div>
+      </div>
+    </div>
+    <div class="code-example">
+      <h3>Skeleton Loading Code:</h3>
+      <pre><code>// Loading state management
+isLoading = signal(false);
+skeletonItems = signal&lt;Item[]&gt;([]);
+
+startLoading() &#123;
+  this.isLoading.set(true);
+  this.skeletonItems.set([]);
+  
+  // Simulate API call
+  setTimeout(() => &#123;
+    this.isLoading.set(false);
+    this.loadData();
+  &#125;, 3000);
+&#125;
+
+// Template shows skeletons during loading
+&lt;div class="content-grid"&gt;
+  &lt;div *ngIf="isLoading(); else content" class="skeleton-card"&gt;
+    &lt;div class="skeleton-line"&gt;&lt;/div&gt;
+    &lt;div class="skeleton-line"&gt;&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;ng-template #content&gt;
+    &lt;div class="content-card"&gt;
+      &lt;h4&gt;{{ '{' }}{{ '{' }} item.title {{ '}' }}{{ '}' }}&lt;/h4&gt;
+    &lt;/div&gt;
+  &lt;/ng-template&gt;
+&lt;/div&gt;</code></pre>
+    </div>
+  </div>
+
+  <div class="example-section">
+    <h2>Toast Notifications</h2>
+    <div class="example-demo">
+      <div class="demo-controls">
+        <button (click)="showSuccessToast()" class="btn-success">Success Toast</button>
+        <button (click)="showErrorToast()" class="btn-error">Error Toast</button>
+        <button (click)="showInfoToast()" class="btn-info">Info Toast</button>
+        <button (click)="showWarningToast()" class="btn-warning">Warning Toast</button>
+        <button (click)="clearAllToasts()" class="btn-secondary">Clear All</button>
+      </div>
+      <div class="demo-output">
+        <div class="toast-demo">
+          <h4>Toast Notification System</h4>
+          <p>Click the buttons above to trigger different types of toast notifications.</p>
+          <ul class="toast-features">
+            <li>✓ Auto-dismiss after 4 seconds</li>
+            <li>✓ Click to dismiss manually</li>
+            <li>✓ Smooth slide-in animation</li>
+            <li>✓ Multiple toast stacking</li>
+            <li>✓ Different notification types</li>
+          </ul>
+          
+          @if (toasts().length > 0) {
+            <div class="toast-status">
+              <p><strong>Active Toasts:</strong> {{ toasts().length }}</p>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+    <div class="code-example">
+      <h3>Toast Notification Code:</h3>
+      <pre><code>// Toast notification service
+addToast(message: string, type: 'success' | 'error' | 'info' | 'warning') &#123;
+  const toast = &#123;
+    id: ++this.toastId,
+    message,
+    type,
+    duration: 4000
+  &#125;;
+  
+  this.toasts.update(toasts => [...toasts, toast]);
+  
+  // Auto-remove
+  setTimeout(() => &#123;
+    this.removeToast(toast.id);
+  &#125;, toast.duration);
+&#125;
+
+// Animation configuration
+trigger('toastAnimation', [
+  transition(':enter', [
+    style(&#123; opacity: 0, transform: 'translateX(100%)' &#125;),
+    animate('300ms ease-out', style(&#123; opacity: 1, transform: 'translateX(0)' &#125;))
+  ])
+])</code></pre>
+    </div>
+  </div>
+
+  <div class="example-section">
+    <h2>Interactive Button States</h2>
+    <div class="example-demo">
+      <div class="demo-controls">
+        <button 
+          (click)="simulateSave()" 
+          [disabled]="saveLoading()"
+          class="btn-primary">
+          @if (saveLoading()) {
+            <span class="spinner"></span> Saving...
+          } @else {
+            💾 Save Data
+          }
+        </button>
+        
+        <button 
+          (click)="simulateUpload()" 
+          [disabled]="uploadLoading()"
+          class="btn-primary">
+          @if (uploadLoading()) {
+            <span class="spinner"></span> Uploading...
+          } @else {
+            📤 Upload File
+          }
+        </button>
+        
+        <button 
+          (click)="simulateDelete()" 
+          [disabled]="deleteLoading()"
+          class="btn-danger">
+          @if (deleteLoading()) {
+            <span class="spinner"></span> Deleting...
+          } @else {
+            🗑️ Delete Item
+          }
+        </button>
+      </div>
+      
+      <div class="demo-output">
+        @if (isUploading()) {
+          <div class="progress-section" [@fadeInOut]>
+            <h4>Upload Progress</h4>
+            <div class="progress-bar">
+              <div 
+                class="progress-fill" 
+                [style.width.%]="uploadProgress()">
+              </div>
+            </div>
+            <p class="progress-text">{{ uploadProgress().toFixed(0) }}% complete</p>
+          </div>
+        }
+        
+        <div class="loading-demo">
+          <h4>Loading States Demo</h4>
+          <p>These buttons demonstrate different loading patterns:</p>
+          <ul class="loading-features">
+            <li>✓ Disabled state during operation</li>
+            <li>✓ Loading spinner animation</li>
+            <li>✓ Progress bar for uploads</li>
+            <li>✓ Success feedback via toasts</li>
+            <li>✓ Visual state changes</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="code-example">
+      <h3>Loading Button Code:</h3>
+      <pre><code>// Loading state management
+saveLoading = signal(false);
+uploadProgress = signal(0);
+
+simulateSave() &#123;
+  this.saveLoading.set(true);
+  
+  setTimeout(() => &#123;
+    this.saveLoading.set(false);
+    this.addToast('Data saved successfully!', 'success');
+  &#125;, 2000);
+&#125;
+
+// Template with conditional loading text
+&lt;button 
+  (click)="simulateSave()" 
+  [disabled]="saveLoading()"&gt;
+  {{ '{' }}{{ '{' }} saveLoading() ? 'Saving...' : '💾 Save Data' {{ '}' }}{{ '}' }}
+&lt;/button&gt;</code></pre>
+    </div>
+  </div>
+
+  <div class="example-section">
+    <h2>Cooldown Button</h2>
+    <div class="example-demo">
+      <div class="demo-controls">
+        <button 
+          (click)="triggerCooldown()" 
+          [disabled]="cooldownActive()"
+          class="cooldown-button"
+          [style.background]="cooldownActive() ? 'linear-gradient(90deg, #e74c3c ' + cooldownProgress() + '%, #95a5a6 ' + cooldownProgress() + '%)' : ''">
+          @if (cooldownActive()) {
+            ⏳ Cooldown: {{ cooldownTime() }}s
+          } @else {
+            🚀 Launch Action
+          }
+        </button>
+      </div>
+      <div class="demo-output">
+        <div class="cooldown-demo">
+          <h4>Cooldown Button Pattern</h4>
+          <p>Perfect for rate-limited actions like API calls, game abilities, or preventing spam.</p>
+          
+          @if (cooldownActive()) {
+            <div class="cooldown-status" [@fadeInOut]>
+              <div class="cooldown-progress">
+                <div class="cooldown-bar">
+                  <div 
+                    class="cooldown-fill" 
+                    [style.width.%]="cooldownProgress()">
+                  </div>
+                </div>
+                <p>Progress: {{ cooldownProgress().toFixed(0) }}%</p>
+              </div>
+            </div>
+          }
+          
+          <ul class="cooldown-features">
+            <li>✓ Visual progress indicator</li>
+            <li>✓ Countdown timer display</li>
+            <li>✓ Disabled state during cooldown</li>
+            <li>✓ Auto-enable after completion</li>
+            <li>✓ Toast notifications for feedback</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="code-example">
+      <h3>Cooldown Button Code:</h3>
+      <pre><code>// Cooldown state management
+cooldownActive = signal(false);
+cooldownTime = signal(0);
+
+cooldownProgress = computed(() => &#123;
+  const maxTime = 5;
+  return ((maxTime - this.cooldownTime()) / maxTime) * 100;
+&#125;);
+
+triggerCooldown() &#123;
+  this.cooldownActive.set(true);
+  this.cooldownTime.set(5);
+  
+  const interval = setInterval(() => &#123;
+    const currentTime = this.cooldownTime();
+    if (currentTime <= 1) &#123;
+      this.cooldownActive.set(false);
+      clearInterval(interval);
+    &#125; else &#123;
+      this.cooldownTime.set(currentTime - 1);
+    &#125;
+  &#125;, 1000);
+&#125;</code></pre>
+    </div>
+  </div>
+
+  <div class="example-section">
+    <h2>Error Handling</h2>
+    <div class="example-demo">
+      <div class="demo-controls">
+        <button (click)="simulateError()" class="btn-danger">Simulate Error</button>
+        <button (click)="clearError()" class="btn-secondary">Clear Error</button>
+        @if (hasError()) {
+          <button (click)="retryOperation()" class="btn-primary">Retry Operation</button>
+        }
+      </div>
+      <div class="demo-output">
+        @if (hasError()) {
+          <div class="error-panel" [@slideUp]>
+            <div class="error-header">
+              <span class="error-icon">⚠️</span>
+              <h4>Something went wrong</h4>
+            </div>
+            <p class="error-message">{{ errorMessage() }}</p>
+            <div class="error-actions">
+              <button (click)="retryOperation()" class="btn-primary btn-sm">
+                🔄 Try Again
+              </button>
+              <button (click)="clearError()" class="btn-secondary btn-sm">
+                ✕ Dismiss
+              </button>
+            </div>
+          </div>
+        } @else {
+          <div class="success-panel" [@fadeInOut]>
+            <div class="success-header">
+              <span class="success-icon">✅</span>
+              <h4>System Status: Operational</h4>
+            </div>
+            <p>All systems are running normally. Click "Simulate Error" to see error handling.</p>
+            <ul class="error-features">
+              <li>✓ Clear error messaging</li>
+              <li>✓ Retry functionality</li>
+              <li>✓ Graceful error recovery</li>
+              <li>✓ User-friendly language</li>
+              <li>✓ Action-oriented solutions</li>
+            </ul>
+          </div>
+        }
+      </div>
+    </div>
+    <div class="code-example">
+      <h3>Error Handling Code:</h3>
+      <pre><code>// Error state management
+hasError = signal(false);
+errorMessage = signal('');
+
+simulateError() &#123;
+  this.hasError.set(true);
+  this.errorMessage.set(
+    'Failed to connect to the server. Please check your connection.'
+  );
+&#125;
+
+retryOperation() &#123;
+  this.clearError();
+  this.addToast('Retrying operation...', 'info');
+  
+  setTimeout(() => &#123;
+    const success = Math.random() > 0.3; // 70% success rate
+    if (success) &#123;
+      this.addToast('Operation completed!', 'success');
+    &#125; else &#123;
+      this.simulateError();
+    &#125;
+  &#125;, 1500);
+&#125;</code></pre>
+    </div>
+  </div>
+</div>

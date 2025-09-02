@@ -1,0 +1,136 @@
+<div class="page-header">
+  <h1>Signals & Reactivity</h1>
+  <p class="page-description">
+    Explore Angular's new reactive primitive with interactive examples of signal(), computed(), effect(), and linkedSignal().
+  </p>
+</div>
+
+<div class="examples-container">
+  <div class="example-section">
+    <h2>Basic Signal</h2>
+    <div class="example-demo">
+      <div class="demo-controls">
+        <button (click)="incrementCount()">Increment Count</button>
+        <button (click)="resetCount()">Reset</button>
+      </div>
+      <div class="demo-output">
+        <p>Count: <strong>{{ count() }}</strong></p>
+      </div>
+    </div>
+    <div class="code-example">
+      <h3>Code:</h3>
+      <pre><code>count = signal(0);
+
+incrementCount() {{'{'}}{{'}'}}
+  this.count.update(current => current + 1);
+{{'}'}}
+
+resetCount() {{'{'}}{{'}'}}
+  this.count.set(0);
+{{'}'}}
+</code></pre>
+    </div>
+  </div>
+
+  <div class="example-section">
+    <h2>Computed Signal</h2>
+    <div class="example-demo">
+      <div class="demo-controls">
+        <input 
+          type="number" 
+          [value]="width()" 
+          (input)="updateWidth($event)"
+          placeholder="Width">
+        <input 
+          type="number" 
+          [value]="height()" 
+          (input)="updateHeight($event)"
+          placeholder="Height">
+      </div>
+      <div class="demo-output">
+        <p>Width: {{ width() }}px</p>
+        <p>Height: {{ height() }}px</p>
+        <p>Area: <strong>{{ area() }}</strong> sq px</p>
+        <div 
+          class="rectangle" 
+          [style.width.px]="Math.min(width(), 200)"
+          [style.height.px]="Math.min(height(), 100)">
+        </div>
+      </div>
+    </div>
+    <div class="code-example">
+      <h3>Code:</h3>
+      <pre><code>width = signal(100);
+height = signal(50);
+area = computed(() => this.width() * this.height());
+</code></pre>
+    </div>
+  </div>
+
+  <div class="example-section">
+    <h2>Effect Demonstration</h2>
+    <div class="example-demo">
+      <div class="demo-controls">
+        <button (click)="addLogEntry()">Add Log Entry</button>
+        <button (click)="clearLogs()">Clear Logs</button>
+      </div>
+      <div class="demo-output">
+        <p>Log entries: {{ logCount() }}</p>
+        <div class="log-container">
+          @for (log of logs(); track log) {
+            <div class="log-entry">{{ log }}</div>
+          }
+        </div>
+      </div>
+    </div>
+    <div class="code-example">
+      <h3>Code:</h3>
+      <pre><code>logs = signal&lt;string[]&gt;([]);
+logCount = computed(() => this.logs().length);
+
+constructor() {{'{'}}{{'}'}}
+  effect(() => {{'{'}}{{'}'}}
+    console.log('Log count changed:', this.logCount());
+  {{'}'}});
+{{'}'}}
+</code></pre>
+    </div>
+  </div>
+
+  <div class="example-section">
+    <h2>Theme Selection Example</h2>
+    <div class="example-demo">
+      <div class="demo-controls">
+        <select (change)="updateTheme($event)">
+          <option value="light">Light Theme</option>
+          <option value="dark">Dark Theme</option>
+          <option value="auto">Auto Theme</option>
+        </select>
+      </div>
+      <div class="demo-output">
+        <p>Selected theme: {{ selectedTheme() }}</p>
+        <p>System prefers dark: {{ systemPrefersDark() }}</p>
+        <p>Effective theme: <strong>{{ effectiveTheme() }}</strong></p>
+        <div 
+          class="theme-preview" 
+          [attr.data-theme]="effectiveTheme()">
+          Theme Preview
+        </div>
+      </div>
+    </div>
+    <div class="code-example">
+      <h3>Code:</h3>
+      <pre><code>selectedTheme = signal('light');
+systemPrefersDark = signal(false);
+
+effectiveTheme = computed(() => {{'{'}}{{'}'}}
+  const selected = this.selectedTheme();
+  if (selected === 'auto') {{'{'}}{{'}'}}
+    return this.systemPrefersDark() ? 'dark' : 'light';
+  {{'}'}}
+  return selected;
+{{'}'}});
+</code></pre>
+    </div>
+  </div>
+</div>

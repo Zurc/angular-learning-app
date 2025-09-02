@@ -1,0 +1,605 @@
+// Import shared styles (same as other components)
+.page-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  
+  h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 1rem;
+  }
+  
+  .page-description {
+    font-size: 1.1rem;
+    color: #666;
+    max-width: 800px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+}
+
+.examples-container {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+.example-section {
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  border: 1px solid #f0f0f0;
+  
+  h2 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: #333;
+    border-bottom: 2px solid #667eea;
+    padding-bottom: 0.5rem;
+  }
+  
+  .example-demo {
+    margin-bottom: 2rem;
+    
+    .demo-controls {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      align-items: center;
+      
+      button {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        min-width: 120px;
+        
+        &:hover:not(:disabled) {
+          transform: translateY(-2px);
+          box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        &:disabled {
+          opacity: 0.7;
+          cursor: not-allowed;
+          transform: none;
+        }
+        
+        // Button variants
+        &.btn-primary {
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        &.btn-success {
+          background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+        }
+        
+        &.btn-error, &.btn-danger {
+          background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        }
+        
+        &.btn-info {
+          background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+        }
+        
+        &.btn-warning {
+          background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+        }
+        
+        &.btn-secondary {
+          background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+        }
+        
+        &.btn-sm {
+          padding: 0.5rem 1rem;
+          font-size: 0.875rem;
+          min-width: 80px;
+        }
+      }
+    }
+    
+    .demo-output {
+      background: #f8f9fa;
+      padding: 2rem;
+      border-radius: 8px;
+      border-left: 4px solid #667eea;
+      min-height: 150px;
+    }
+  }
+  
+  .code-example {
+    h3 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: #333;
+    }
+    
+    pre {
+      background: #2d3748;
+      color: #e2e8f0;
+      padding: 1.5rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      margin: 0;
+      
+      code {
+        font-family: 'Fira Code', 'Courier New', monospace;
+        font-size: 0.9rem;
+        line-height: 1.5;
+      }
+    }
+  }
+}
+
+// Toast Notification Styles
+.toast-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-width: 400px;
+}
+
+.toast {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: translateX(-4px);
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.2);
+  }
+  
+  .toast-content {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    gap: 0.75rem;
+    position: relative;
+  }
+  
+  .toast-icon {
+    font-size: 1.25rem;
+    font-weight: bold;
+    min-width: 24px;
+  }
+  
+  .toast-message {
+    flex: 1;
+    font-size: 0.9rem;
+    line-height: 1.4;
+  }
+  
+  .toast-close {
+    background: none;
+    border: none;
+    font-size: 1.25rem;
+    cursor: pointer;
+    color: #999;
+    padding: 0;
+    min-width: 20px;
+    
+    &:hover {
+      color: #666;
+    }
+  }
+  
+  // Toast type variants
+  &.toast-success {
+    border-left: 4px solid #27ae60;
+    
+    .toast-icon {
+      color: #27ae60;
+    }
+  }
+  
+  &.toast-error {
+    border-left: 4px solid #e74c3c;
+    
+    .toast-icon {
+      color: #e74c3c;
+    }
+  }
+  
+  &.toast-info {
+    border-left: 4px solid #3498db;
+    
+    .toast-icon {
+      color: #3498db;
+    }
+  }
+  
+  &.toast-warning {
+    border-left: 4px solid #f39c12;
+    
+    .toast-icon {
+      color: #f39c12;
+    }
+  }
+}
+
+// Skeleton Loading Styles
+.content-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.skeleton-card {
+  background: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  border: 2px solid #f0f0f0;
+  display: flex;
+  gap: 1rem;
+}
+
+.skeleton-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.skeleton-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.skeleton-line {
+  height: 16px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 4px;
+  
+  &.skeleton-title {
+    height: 20px;
+    width: 80%;
+  }
+  
+  &.skeleton-text {
+    width: 100%;
+    
+    &.short {
+      width: 60%;
+    }
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.content-card {
+  background: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  border: 2px solid #e0e0e0;
+  display: flex;
+  gap: 1rem;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    border-color: #667eea;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.1);
+  }
+}
+
+.card-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  color: white;
+}
+
+.card-content {
+  flex: 1;
+  
+  h4 {
+    margin: 0 0 0.5rem 0;
+    color: #333;
+    font-size: 1.1rem;
+  }
+  
+  p {
+    margin: 0;
+    color: #666;
+    line-height: 1.5;
+    font-size: 0.9rem;
+  }
+}
+
+// Loading Button Styles
+.spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 0.8s linear infinite;
+  margin-right: 0.5rem;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// Progress Bar Styles
+.progress-section {
+  background: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  border: 2px solid #e0e0e0;
+  
+  h4 {
+    margin: 0 0 1rem 0;
+    color: #333;
+  }
+}
+
+.progress-bar {
+  width: 100%;
+  height: 12px;
+  background: #e0e0e0;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 0.75rem;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 6px;
+  transition: width 0.3s ease;
+}
+
+.progress-text {
+  margin: 0;
+  text-align: center;
+  font-size: 0.9rem;
+  color: #666;
+  font-weight: 500;
+}
+
+// Cooldown Button Styles
+.cooldown-button {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease !important;
+  
+  &:disabled {
+    color: white !important;
+  }
+}
+
+.cooldown-demo {
+  h4 {
+    margin: 0 0 1rem 0;
+    color: #333;
+  }
+  
+  p {
+    color: #666;
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+  }
+}
+
+.cooldown-status {
+  background: white;
+  border-radius: 8px;
+  padding: 1rem;
+  margin: 1rem 0;
+  border: 2px solid #e0e0e0;
+}
+
+.cooldown-progress {
+  h5 {
+    margin: 0 0 0.75rem 0;
+    color: #333;
+    font-size: 0.9rem;
+  }
+}
+
+.cooldown-bar {
+  width: 100%;
+  height: 8px;
+  background: #e0e0e0;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.cooldown-fill {
+  height: 100%;
+  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+// Feature Lists
+.toast-features,
+.loading-features,
+.cooldown-features,
+.error-features {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0;
+  
+  li {
+    padding: 0.25rem 0;
+    color: #666;
+    font-size: 0.9rem;
+  }
+}
+
+.toast-demo,
+.loading-demo {
+  h4 {
+    margin: 0 0 1rem 0;
+    color: #333;
+  }
+  
+  p {
+    color: #666;
+    margin-bottom: 1rem;
+    line-height: 1.5;
+  }
+}
+
+.toast-status {
+  background: white;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-top: 1rem;
+  border: 2px solid #e0e0e0;
+  
+  p {
+    margin: 0;
+    color: #333;
+  }
+}
+
+// Error Handling Styles
+.error-panel {
+  background: #fff8f8;
+  border: 2px solid #e74c3c;
+  border-radius: 8px;
+  padding: 1.5rem;
+  color: #333;
+}
+
+.success-panel {
+  background: #f8fff8;
+  border: 2px solid #27ae60;
+  border-radius: 8px;
+  padding: 1.5rem;
+  color: #333;
+}
+
+.error-header,
+.success-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  
+  h4 {
+    margin: 0;
+    color: #333;
+  }
+}
+
+.error-icon {
+  font-size: 1.5rem;
+}
+
+.success-icon {
+  font-size: 1.5rem;
+}
+
+.error-message {
+  margin: 0 0 1.5rem 0;
+  line-height: 1.5;
+  color: #666;
+}
+
+.error-actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .page-header h1 {
+    font-size: 2rem;
+  }
+  
+  .example-section {
+    padding: 1.5rem;
+    
+    .example-demo {
+      .demo-controls {
+        flex-direction: column;
+        align-items: stretch;
+        
+        button {
+          width: 100%;
+          margin-bottom: 0.5rem;
+        }
+      }
+      
+      .demo-output {
+        padding: 1rem;
+      }
+    }
+  }
+  
+  .toast-container {
+    right: 10px;
+    left: 10px;
+    max-width: none;
+  }
+  
+  .content-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .content-card,
+  .skeleton-card {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .card-avatar,
+  .skeleton-avatar {
+    align-self: center;
+  }
+  
+  .error-actions {
+    flex-direction: column;
+    
+    button {
+      width: 100%;
+    }
+  }
+}

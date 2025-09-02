@@ -1,0 +1,158 @@
+<div class="page-header">
+  <h1>Component Techniques</h1>
+  <p class="page-description">
+    Learn ViewChild usage, component communication, content projection, and host binding patterns.
+  </p>
+</div>
+
+<div class="examples-container">
+  <div class="example-section">
+    <h2>ViewChild Example</h2>
+    <div class="example-demo">
+      <div class="demo-controls">
+        <button (click)="focusInput()">Focus Input</button>
+        <button (click)="clearInput()">Clear Input</button>
+        <button (click)="getInputValue()">Get Value</button>
+      </div>
+      <div class="demo-output">
+        <input #textInput type="text" placeholder="Type something here..." class="demo-input">
+        <p>Input value: <strong>{{ inputValue }}</strong></p>
+      </div>
+    </div>
+    <div class="code-example">
+      <h3>ViewChild Code:</h3>
+      <pre><code>@ViewChild('textInput') textInput!: ElementRef&lt;HTMLInputElement&gt;;
+inputValue = '';
+
+focusInput() &#123;
+  this.textInput.nativeElement.focus();
+&#125;
+
+getInputValue() &#123;
+  this.inputValue = this.textInput.nativeElement.value;
+&#125;</code></pre>
+    </div>
+  </div>
+
+  <div class="example-section">
+    <h2>Component Communication</h2>
+    <div class="example-demo">
+      <div class="demo-controls">
+        <button (click)="sendMessageToChild()">Send Message to Child</button>
+        <button (click)="resetChildCounter()">Reset Child Counter</button>
+      </div>
+      <div class="demo-output">
+        <app-child-component 
+          [message]="childMessage"
+          [counter]="childCounter"
+          (messageEvent)="onChildMessage($event)"
+          (counterChange)="onChildCounterChange($event)">
+        </app-child-component>
+        <p>Messages from child: {{ messagesFromChild.length }}</p>
+        @for (msg of messagesFromChild; track $index) {
+          <div class="message-item">{{ msg }}</div>
+        }
+      </div>
+    </div>
+    <div class="code-example">
+      <h3>Parent Component:</h3>
+      <pre><code>// Parent Component
+@Input() message: string = '';
+@Input() counter: number = 0;
+@Output() messageEvent = new EventEmitter&lt;string&gt;();
+@Output() counterChange = new EventEmitter&lt;number&gt;();
+
+sendMessageToChild() &#123;
+  this.childMessage = `Hello at $&#123;new Date().toLocaleTimeString()&#125;`;
+&#125;
+
+onChildMessage(message: string) &#123;
+  this.messagesFromChild.push(message);
+&#125;</code></pre>
+    </div>
+  </div>
+
+  <div class="example-section">
+    <h2>Content Projection</h2>
+    <div class="example-demo">
+      <div class="demo-controls">
+        <button (click)="toggleProjectionContent()">Toggle Content</button>
+      </div>
+      <div class="demo-output">
+        <app-card-component>
+          <div slot="header">
+            <h3>Card Header</h3>
+          </div>
+          <div slot="content">
+            @if (showProjectionContent) {
+              <p>This content is projected into the card component!</p>
+              <p>It can contain any HTML content.</p>
+            } @else {
+              <p>Content is hidden</p>
+            }
+          </div>
+          <div slot="footer">
+            <button class="card-action">Action Button</button>
+          </div>
+        </app-card-component>
+      </div>
+    </div>
+    <div class="code-example">
+      <h3>Card Component Template:</h3>
+      <pre><code>&lt;div class="card"&gt;
+  &lt;div class="card-header"&gt;
+    &lt;ng-content select="[slot=header]"&gt;&lt;/ng-content&gt;
+  &lt;/div&gt;
+  &lt;div class="card-content"&gt;
+    &lt;ng-content select="[slot=content]"&gt;&lt;/ng-content&gt;
+  &lt;/div&gt;
+  &lt;div class="card-footer"&gt;
+    &lt;ng-content select="[slot=footer]"&gt;&lt;/ng-content&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+    </div>
+  </div>
+
+  <div class="example-section">
+    <h2>Host Binding Example</h2>
+    <div class="example-demo">
+      <div class="demo-controls">
+        <button (click)="toggleHighlight()">Toggle Highlight</button>
+        <button (click)="changeTheme()">Change Theme</button>
+        <input 
+          type="range" 
+          min="0" 
+          max="100" 
+          [value]="opacity" 
+          (input)="updateOpacity($event)"
+          class="opacity-slider">
+        <span>Opacity: {{ opacity }}%</span>
+      </div>
+      <div class="demo-output">
+        <app-host-demo
+          [isHighlighted]="isHighlighted"
+          [theme]="currentTheme"
+          [opacity]="opacity">
+          This component uses host bindings for dynamic styling
+        </app-host-demo>
+      </div>
+    </div>
+    <div class="code-example">
+      <h3>Host Demo Component:</h3>
+      <pre><code>@Component(&#123;
+  selector: 'app-host-demo',
+  template: '&lt;ng-content&gt;&lt;/ng-content&gt;',
+  host: &#123;
+    '[class.highlighted]': 'isHighlighted',
+    '[attr.data-theme]': 'theme',
+    '[style.opacity]': 'opacity / 100'
+  &#125;
+&#125;)
+export class HostDemoComponent &#123;
+  @Input() isHighlighted = false;
+  @Input() theme = 'default';
+  @Input() opacity = 100;
+&#125;</code></pre>
+    </div>
+  </div>
+</div>

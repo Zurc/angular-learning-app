@@ -1,0 +1,179 @@
+<div class="page-header">
+  <h1>Angular Animations</h1>
+  <p class="page-description">
+    Create smooth transitions and engaging user experiences with Angular's animation API.
+  </p>
+</div>
+
+<div class="examples-container">
+  <div class="example-section">
+    <h2>Enter/Leave Animations</h2>
+    <div class="example-demo">
+      <div class="demo-controls">
+        <button (click)="toggleItem()">Toggle Item</button>
+        <button (click)="addItem()">Add Item</button>
+        <button (click)="removeItem()">Remove Last Item</button>
+      </div>
+      <div class="demo-output">
+        @if (showItem) {
+          <div class="animated-item fade-item" [@fadeInOut]>
+            🎨 I fade in and out!
+          </div>
+        }
+        
+        <div class="items-container">
+          @for (item of items; track item.id) {
+            <div class="animated-item slide-item" [@slideInOut]>
+              {{ item.text }} #{{ item.id }}
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+    <div class="code-example">
+      <h3>Enter/Leave Animation Code:</h3>
+      <pre><code>@Component(&#123;
+  animations: [
+    trigger('fadeInOut', [
+      transition(':enter', [
+        style(&#123; opacity: 0 &#125;),
+        animate('300ms ease-in', style(&#123; opacity: 1 &#125;))
+      ]),
+      transition(':leave', [
+        animate('300ms ease-out', style(&#123; opacity: 0 &#125;))
+      ])
+    ]),
+    trigger('slideInOut', [
+      transition(':enter', [
+        style(&#123; transform: 'translateX(-100%)', opacity: 0 &#125;),
+        animate('300ms ease-in', style(&#123; transform: 'translateX(0)', opacity: 1 &#125;))
+      ])
+    ])
+  ]
+&#125;)</code></pre>
+    </div>
+  </div>
+
+  <div class="example-section">
+    <h2>State Transitions</h2>
+    <div class="example-demo">
+      <div class="demo-controls">
+        <button (click)="toggleExpand()">Toggle Expand</button>
+        <button (click)="changeColor()">Change Color</button>
+        <button (click)="toggleRotate()">Toggle Rotate</button>
+      </div>
+      <div class="demo-output">
+        <div 
+          class="state-demo-box"
+          [@expandCollapse]="isExpanded ? 'expanded' : 'collapsed'"
+          [@colorChange]="currentColor"
+          [@rotateState]="isRotated ? 'rotated' : 'normal'">
+          <p>State: {{ isExpanded ? 'Expanded' : 'Collapsed' }}</p>
+          <p>Color: {{ currentColor }}</p>
+          <p>Rotation: {{ isRotated ? 'Rotated' : 'Normal' }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="code-example">
+      <h3>State Animation Code:</h3>
+      <pre><code>trigger('expandCollapse', [
+  state('collapsed', style(&#123;
+    height: '100px',
+    width: '200px'
+  &#125;)),
+  state('expanded', style(&#123;
+    height: '200px',
+    width: '300px'
+  &#125;)),
+  transition('collapsed &lt;=&gt; expanded', animate('500ms ease-in-out'))
+]),
+trigger('rotateState', [
+  state('normal', style(&#123; transform: 'rotate(0deg)' &#125;)),
+  state('rotated', style(&#123; transform: 'rotate(45deg)' &#125;)),
+  transition('normal &lt;=&gt; rotated', animate('300ms ease'))
+])</code></pre>
+    </div>
+  </div>
+
+  <div class="example-section">
+    <h2>List Animations</h2>
+    <div class="example-demo">
+      <div class="demo-controls">
+        <button (click)="addListItem()">Add Item</button>
+        <button (click)="removeFirstItem()">Remove First</button>
+        <button (click)="shuffleList()">Shuffle List</button>
+        <button (click)="clearList()">Clear All</button>
+      </div>
+      <div class="demo-output">
+        <div class="animated-list">
+          @for (listItem of listItems; track listItem.id) {
+            <div 
+              class="list-item"
+              [@listAnimation]
+              (click)="removeListItem(listItem.id)">
+              <span>{{ listItem.text }}</span>
+              <small>Click to remove</small>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+    <div class="code-example">
+      <h3>List Animation Code:</h3>
+      <pre><code>trigger('listAnimation', [
+  transition(':enter', [
+    style(&#123;
+      opacity: 0,
+      transform: 'translateY(-10px) scale(0.95)'
+    &#125;),
+    animate('200ms ease-out', style(&#123;
+      opacity: 1,
+      transform: 'translateY(0) scale(1)'
+    &#125;))
+  ]),
+  transition(':leave', [
+    animate('200ms ease-in', style(&#123;
+      opacity: 0,
+      transform: 'translateY(-10px) scale(0.95)'
+    &#125;))
+  ])
+])</code></pre>
+    </div>
+  </div>
+
+  <div class="example-section">
+    <h2>Complex Keyframe Animation</h2>
+    <div class="example-demo">
+      <div class="demo-controls">
+        <button (click)="triggerBounce()">Bounce Animation</button>
+        <button (click)="triggerPulse()">Pulse Animation</button>
+        <button (click)="triggerWobble()">Wobble Animation</button>
+      </div>
+      <div class="demo-output">
+        <div 
+          class="keyframe-demo"
+          [@bounceAnimation]="bounceState"
+          [@pulseAnimation]="pulseState"
+          [@wobbleAnimation]="wobbleState">
+          🎯 Keyframe Animations
+        </div>
+      </div>
+    </div>
+    <div class="code-example">
+      <h3>Keyframe Animation Code:</h3>
+      <pre><code>trigger('bounceAnimation', [
+  state('idle', style(&#123; transform: 'translateY(0)' &#125;)),
+  state('bounce', style(&#123; transform: 'translateY(0)' &#125;)),
+  transition('idle =&gt; bounce', [
+    animate('600ms', keyframes([
+      style(&#123; transform: 'translateY(0)', offset: 0 &#125;),
+      style(&#123; transform: 'translateY(-30px)', offset: 0.3 &#125;),
+      style(&#123; transform: 'translateY(0)', offset: 0.5 &#125;),
+      style(&#123; transform: 'translateY(-15px)', offset: 0.7 &#125;),
+      style(&#123; transform: 'translateY(0)', offset: 1 &#125;)
+    ]))
+  ])
+])</code></pre>
+    </div>
+  </div>
+</div>

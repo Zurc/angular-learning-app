@@ -1,0 +1,317 @@
+<div class="page-header">
+  <h1>Custom Form Controls</h1>
+  <p class="page-description">
+    Build reusable form components without ControlValueAccessor and advanced form patterns.
+  </p>
+</div>
+
+<div class="examples-container">
+  <div class="example-section">
+    <h2>Signal-Based Form Controls</h2>
+    <div class="example-demo">
+      <div class="demo-controls">
+        <button (click)="resetForm()">Reset Form</button>
+        <button (click)="fillSampleData()">Fill Sample Data</button>
+        <button (click)="toggleValidation()">Toggle Validation</button>
+      </div>
+      <div class="demo-output">
+        <div class="custom-form">
+          <div class="form-group">
+            <label>Username:</label>
+            <input 
+              type="text"
+              [value]="username()"
+              (input)="updateUsername($event)"
+              placeholder="Enter username"
+              [class.invalid]="!isUsernameValid() && validationEnabled()"
+              [class.valid]="isUsernameValid() && username().length > 0">
+            @if (!isUsernameValid() && validationEnabled()) {
+              <div class="error-message">Username must be at least 3 characters</div>
+            }
+          </div>
+
+          <div class="form-group">
+            <label>Email:</label>
+            <input 
+              type="email"
+              [value]="email()"
+              (input)="updateEmail($event)"
+              placeholder="Enter email"
+              [class.invalid]="!isEmailValid() && validationEnabled()"
+              [class.valid]="isEmailValid() && email().length > 0">
+            @if (!isEmailValid() && validationEnabled()) {
+              <div class="error-message">Please enter a valid email address</div>
+            }
+          </div>
+
+          <div class="form-group">
+            <label>Rating:</label>
+            <div class="star-rating">
+              @for (star of starArray(); track $index) {
+                <span 
+                  class="star" 
+                  [class.filled]="$index < rating()"
+                  (click)="setRating($index + 1)">
+                  ★
+                </span>
+              }
+            </div>
+            <span class="rating-text">{{ rating() }} out of 5 stars</span>
+          </div>
+
+          <div class="form-group">
+            <label>Tags:</label>
+            <div class="tag-input-container">
+              <div class="tags-list">
+                @for (tag of tags(); track tag) {
+                  <span class="tag">
+                    {{ tag }}
+                    <button class="remove-tag" (click)="removeTag(tag)">×</button>
+                  </span>
+                }
+              </div>
+              <input 
+                type="text"
+                #tagInput
+                placeholder="Add tags..."
+                (keyup.enter)="addTag(tagInput.value); tagInput.value = ''"
+                (keyup)="handleTagInput($event, tagInput)">
+            </div>
+            <div class="tags-display">
+              Tags: {{ tags().length > 0 ? tags().join(', ') : 'No tags' }}
+            </div>
+          </div>
+
+          <div class="form-summary">
+            <h4>Form Summary:</h4>
+            <p><strong>Username:</strong> {{ username() || 'Not set' }}</p>
+            <p><strong>Email:</strong> {{ email() || 'Not set' }}</p>
+            <p><strong>Rating:</strong> {{ rating() }}/5</p>
+            <p><strong>Tags:</strong> {{ tags().length }} tags</p>
+            <p><strong>Form Valid:</strong> {{ isFormValid() ? 'Yes' : 'No' }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="code-example">
+      <h3>Signal-Based Form Control:</h3>
+      <pre><code>// Custom Text Input Component
+@Component(&#123;
+  selector: 'app-text-input',
+  template: `
+    &lt;input 
+      [value]="value()" 
+      (input)="onInput($event)"
+      [placeholder]="placeholder()"
+      [class.invalid]="!isValid() && touched()"&gt;
+  `
+&#125;)
+export class TextInputComponent &#123;
+  value = input('');
+  required = input(false);
+  minLength = input(0);
+  
+  @Output() valueChange = new EventEmitter&lt;string&gt;();
+  @Output() validityChange = new EventEmitter&lt;boolean&gt;();
+  
+  private touched = signal(false);
+  private isValid = computed(() => &#123;
+    const val = this.value();
+    if (this.required() && !val) return false;
+    if (val.length &lt; this.minLength()) return false;
+    return true;
+  &#125;);
+&#125;</code></pre>
+    </div>
+  </div>
+
+  <div class="example-section">
+    <h2>Interactive Form Builder</h2>
+    <div class="example-demo">
+      <div class="demo-controls">
+        <button (click)="addFormField()">Add Field</button>
+        <button (click)="removeLastField()">Remove Last</button>
+        <button (click)="clearFormBuilder()">Clear All</button>
+      </div>
+      <div class="demo-output">
+        <div class="form-builder">
+          <h4>Dynamic Form:</h4>
+          @for (field of formFields(); track field.id) {
+            <div class="dynamic-field" [@listAnimation]>
+              <label>{{ field.label }}:</label>
+              @switch (field.type) {
+                @case ('text') {
+                  <input 
+                    type="text" 
+                    [value]="getFieldValue(field.id)"
+                    (input)="updateFieldValue(field.id, $event)"
+                    [placeholder]="field.placeholder">
+                }
+                @case ('number') {
+                  <input 
+                    type="number" 
+                    [value]="getFieldValue(field.id)"
+                    (input)="updateFieldValue(field.id, $event)"
+                    [placeholder]="field.placeholder">
+                }
+                @case ('select') {
+                  <select 
+                    [value]="getFieldValue(field.id)"
+                    (change)="updateFieldValue(field.id, $event)">
+                    <option value="">Select an option</option>
+                    @for (option of field.options; track option) {
+                      <option [value]="option">{{ option }}</option>
+                    }
+                  </select>
+                }
+                @case ('checkbox') {
+                  <label class="checkbox-label">
+                    <input 
+                      type="checkbox" 
+                      [checked]="getFieldValue(field.id) === 'true'"
+                      (change)="updateFieldValue(field.id, $event)">
+                    {{ field.placeholder }}
+                  </label>
+                }
+              }
+              <button 
+                class="remove-field" 
+                (click)="removeFormField(field.id)"
+                title="Remove field">
+                ✕
+              </button>
+            </div>
+          }
+          
+          @if (formFields().length === 0) {
+            <div class="empty-form">
+              <p>No fields added yet. Click "Add Field" to start building your form.</p>
+            </div>
+          }
+          
+          <div class="form-data">
+            <h4>Form Data:</h4>
+            <pre>{{ getFormDataJson() }}</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="code-example">
+      <h3>Dynamic Form Builder Code:</h3>
+      <pre><code>interface FormField &#123;
+  id: string;
+  type: 'text' | 'number' | 'select' | 'checkbox';
+  label: string;
+  placeholder?: string;
+  options?: string[];
+&#125;
+
+formFields = signal&lt;FormField[]&gt;([]);
+formData = signal&lt;Record&lt;string, any&gt;&gt;(&#123;&#125;);
+
+addFormField() &#123;
+  const fieldTypes = ['text', 'number', 'select', 'checkbox'];
+  const randomType = fieldTypes[Math.floor(Math.random() * fieldTypes.length)];
+  
+  const newField: FormField = &#123;
+    id: `field_$&#123;Date.now()&#125;`,
+    type: randomType as any,
+    label: `Field $&#123;this.formFields().length + 1&#125;`,
+    placeholder: `Enter $&#123;randomType&#125; value`
+  &#125;;
+  
+  this.formFields.update(fields => [...fields, newField]);
+&#125;</code></pre>
+    </div>
+  </div>
+
+  <div class="example-section">
+    <h2>Real-Time Validation</h2>
+    <div class="example-demo">
+      <div class="demo-controls">
+        <button (click)="togglePasswordRequirements()">
+          {{ showPasswordRequirements() ? 'Hide' : 'Show' }} Password Requirements
+        </button>
+        <button (click)="clearValidationForm()">Clear Form</button>
+      </div>
+      <div class="demo-output">
+        <div class="validation-form">
+          <div class="form-group">
+            <label>Password:</label>
+            <input 
+              type="password" 
+              [value]="password()"
+              (input)="password.set($event.target.value)"
+              placeholder="Enter password"
+              [class.valid]="passwordValidation().isValid"
+              [class.invalid]="!passwordValidation().isValid && password().length > 0">
+            
+            @if (showPasswordRequirements()) {
+              <div class="password-requirements">
+                <h4>Password Requirements:</h4>
+                <div class="requirement" [class.met]="passwordValidation().minLength">
+                  ✓ At least 8 characters
+                </div>
+                <div class="requirement" [class.met]="passwordValidation().hasUppercase">
+                  ✓ Contains uppercase letter
+                </div>
+                <div class="requirement" [class.met]="passwordValidation().hasLowercase">
+                  ✓ Contains lowercase letter  
+                </div>
+                <div class="requirement" [class.met]="passwordValidation().hasNumber">
+                  ✓ Contains number
+                </div>
+                <div class="requirement" [class.met]="passwordValidation().hasSpecial">
+                  ✓ Contains special character
+                </div>
+              </div>
+            }
+          </div>
+
+          <div class="form-group">
+            <label>Confirm Password:</label>
+            <input 
+              type="password" 
+              [value]="confirmPassword()"
+              (input)="confirmPassword.set($event.target.value)"
+              placeholder="Confirm password"
+              [class.valid]="passwordsMatch() && confirmPassword().length > 0"
+              [class.invalid]="!passwordsMatch() && confirmPassword().length > 0">
+            
+            @if (!passwordsMatch() && confirmPassword().length > 0) {
+              <div class="error-message">Passwords do not match</div>
+            }
+          </div>
+
+          <div class="validation-summary">
+            <p><strong>Password Valid:</strong> {{ passwordValidation().isValid ? 'Yes' : 'No' }}</p>
+            <p><strong>Passwords Match:</strong> {{ passwordsMatch() ? 'Yes' : 'No' }}</p>
+            <p><strong>Form Ready:</strong> {{ passwordValidation().isValid && passwordsMatch() ? 'Yes' : 'No' }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="code-example">
+      <h3>Real-Time Validation Code:</h3>
+      <pre><code>password = signal('');
+confirmPassword = signal('');
+
+passwordValidation = computed(() => &#123;
+  const pwd = this.password();
+  return &#123;
+    minLength: pwd.length >= 8,
+    hasUppercase: /[A-Z]/.test(pwd),
+    hasLowercase: /[a-z]/.test(pwd),
+    hasNumber: /\d/.test(pwd),
+    hasSpecial: /[!@#$%^&*]/.test(pwd),
+    isValid: false
+  &#125;;
+&#125;);
+
+passwordsMatch = computed(() => &#123;
+  return this.password() === this.confirmPassword() && 
+         this.password().length > 0;
+&#125;);</code></pre>
+    </div>
+  </div>
+</div>

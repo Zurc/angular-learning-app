@@ -1,0 +1,10 @@
+<div class="child-component">
+  <h4>Child Component</h4>
+  <p>Message from parent: <strong>{{ message || 'No message' }}</strong></p>
+  <p>Counter: {{ counter }}</p>
+  
+  <div class="child-controls">
+    <button (click)="incrementCounter()">Increment</button>
+    <button (click)="sendMessageToParent()">Send Message to Parent</button>
+  </div>
+</div>
